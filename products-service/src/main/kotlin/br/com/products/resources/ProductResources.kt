@@ -1,25 +1,17 @@
 package br.com.products.resources
 
-import br.com.products.ProductsServiceReply
-import br.com.products.ProductsServiceRequest
-import br.com.products.ProductsServiceServiceGrpc
+import br.com.products.ProductServiceResponse
+import br.com.products.ProductServiceRequest
+import br.com.products.ProductsServiceGrpc
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
 @GrpcService
-class ProductResources : ProductsServiceServiceGrpc.ProductsServiceServiceImplBase() {
-    override fun send(
-        request: ProductsServiceRequest?,
-        responseObserver: StreamObserver<ProductsServiceReply>?
+class ProductResources : ProductsServiceGrpc.ProductsServiceImplBase() {
+    override fun create(
+        request: ProductServiceRequest?,
+        responseObserver: StreamObserver<ProductServiceResponse>?
     ) {
-        val toSend = "Hello, ${request?.name}"
-
-        val reply = ProductsServiceReply.newBuilder()
-            .setMessage(toSend)
-            .build()
-
-        responseObserver?.onNext(reply)
-        responseObserver?.onCompleted()
+        super.create(request, responseObserver)
     }
-
 }
