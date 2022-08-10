@@ -1,5 +1,6 @@
 package br.com.products.domain
 
+import br.com.products.dto.ProductResponse
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -14,3 +15,11 @@ data class Product(
     val price: Double,
     val quantityInStock: Int
 )
+
+fun Product.toProductResponse() =
+    ProductResponse(
+        id = id,
+        name = name,
+        price = price,
+        quantityInStock = quantityInStock
+    )
