@@ -1,19 +1,44 @@
 package br.com.products
-import io.micronaut.runtime.EmbeddedApplication
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import org.junit.jupiter.api.Assertions
+import br.com.products.domain.Product
+import br.com.products.dto.ProductRequest
+import br.com.products.repository.ProductRepository
+import br.com.products.service.impl.ProductServiceImpl
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import jakarta.inject.Inject
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
-@MicronautTest
-class ProductsServiceTest {
-
-    @Inject
-    lateinit var application: EmbeddedApplication<*>
+internal class ProductsServiceTest {
+    private val productRepository = Mockito.mock(ProductRepository::class.java)
+    private val productService = ProductServiceImpl(productRepository)
 
     @Test
-    fun testItWorks() {
-        Assertions.assertTrue(application.isRunning)
-    }
+    fun `when create method is call with valid data a ProductResponse is returned` () {
+        val productInput = Product(
+            id = null,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
 
+        val productOutput = Product(
+            id = 1,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        val request = ProductRequest(
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        `when`(productRepository.save(productInput))
+            .thenReturn(productOutput)
+
+        val response = productService.create(request)
+
+        assertEquals(request.name, response.name)
+    }
 }
