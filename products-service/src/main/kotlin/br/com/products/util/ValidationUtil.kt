@@ -6,10 +6,10 @@ class ValidationUtil {
     companion object {
         fun validatePayload(payload: ProductServiceRequest?) : ProductServiceRequest {
             payload?.let {
-                if (payload.name.isNullOrBlank())
+                if (it.name.isNullOrBlank())
                     throw IllegalArgumentException("O nome não pode ser nulo ou vazio")
 
-                if (payload.price.isNaN())
+                if (it.price.isNaN() || it.price < 0)
                     throw IllegalArgumentException("Preco precisa ser um valor valido")
 
                 return it

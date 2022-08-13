@@ -1,4 +1,4 @@
-package br.com.products
+package br.com.products.service
 import br.com.products.domain.Product
 import br.com.products.dto.ProductRequest
 import br.com.products.repository.ProductRepository
