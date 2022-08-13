@@ -5,6 +5,7 @@ import br.com.products.ProductServiceRequest
 import br.com.products.ProductsServiceGrpc
 import br.com.products.dto.ProductRequest
 import br.com.products.service.ProductService
+import br.com.products.util.ValidationUtil
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
@@ -17,10 +18,12 @@ class ProductResources(
         request: ProductServiceRequest?,
         responseObserver: StreamObserver<ProductServiceResponse>?
     ) {
+        val payload = ValidationUtil.validatePayload(request)
+
         val productRequest = ProductRequest(
-            name = request!!.name,
-            price = request.price,
-            quantityInStock = request.quantityInStock
+            name = payload.name,
+            price = payload.price,
+            quantityInStock = payload.quantityInStock
         )
         val productResponse = productService.create(productRequest)
 
