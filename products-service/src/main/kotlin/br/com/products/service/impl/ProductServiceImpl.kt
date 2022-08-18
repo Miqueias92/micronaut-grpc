@@ -1,6 +1,7 @@
 package br.com.products.service.impl
 
 import br.com.products.domain.Product
+import br.com.products.domain.toProductResponse
 import br.com.products.dto.ProductRequest
 import br.com.products.dto.ProductResponse
 import br.com.products.exception.AlreadyExistsException
@@ -30,6 +31,10 @@ class ProductServiceImpl(
                 quantityInStock = product.quantityInStock
             )
         }
+    }
+
+    override fun findById(id: Long): ProductResponse {
+        return productRepository.findById(id).get().toProductResponse()
     }
 
     private fun verifyByName(name: String) {

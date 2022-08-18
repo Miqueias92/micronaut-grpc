@@ -1,5 +1,6 @@
 package br.com.products.resources
 
+import br.com.products.FindByIdServiceRequest
 import br.com.products.ProductServiceResponse
 import br.com.products.ProductServiceRequest
 import br.com.products.ProductsServiceGrpc
@@ -46,5 +47,22 @@ class ProductResources(
                     .asRuntimeException()
             )
         }
+    }
+
+    override fun findById(
+        request: FindByIdServiceRequest?,
+        responseObserver: StreamObserver<ProductServiceResponse>?
+    ) {
+
+        val productResponse = productService.findById(request!!.id)
+
+        val response = ProductServiceResponse.newBuilder()
+            .setId(productResponse.id!!)
+            .setName(productResponse.name)
+            .setPrice(productResponse.price)
+            .setQuantityInStock(productResponse.quantityInStock).build()
+
+        responseObserver?.onNext(response)
+        responseObserver?.onCompleted()
     }
 }
