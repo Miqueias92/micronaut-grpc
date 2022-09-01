@@ -5,7 +5,7 @@ import io.grpc.Status
 class ProductNotFoundException(private val productId: Long) : BaseBusinessException() {
 
     override fun errorMessage(): String {
-        return "Produto com id [ $productId ] já cadastrado no sistema"
+        return "Produto com id [ $productId ] não cadastrado no sistema"
     }
 
     override fun statusCode(): Status.Code {

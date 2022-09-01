@@ -53,16 +53,22 @@ class ProductResources(
         request: FindByIdServiceRequest?,
         responseObserver: StreamObserver<ProductServiceResponse>?
     ) {
+        try {
+            val productResponse = productService.findById(request!!.id)
 
-        val productResponse = productService.findById(request!!.id)
+            val response = ProductServiceResponse.newBuilder()
+                .setId(productResponse.id!!)
+                .setName(productResponse.name)
+                .setPrice(productResponse.price)
+                .setQuantityInStock(productResponse.quantityInStock).build()
 
-        val response = ProductServiceResponse.newBuilder()
-            .setId(productResponse.id!!)
-            .setName(productResponse.name)
-            .setPrice(productResponse.price)
-            .setQuantityInStock(productResponse.quantityInStock).build()
-
-        responseObserver?.onNext(response)
-        responseObserver?.onCompleted()
+            responseObserver?.onNext(response)
+            responseObserver?.onCompleted()
+        } catch (ex: BaseBusinessException) {
+            responseObserver?.onError(
+                ex.statusCode().toStatus().withDescription(ex.errorMessage())
+                    .asRuntimeException()
+            )
+        }
     }
 }
