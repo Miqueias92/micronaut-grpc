@@ -36,6 +36,7 @@ dependencies {
 
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.mockito:mockito-core:4.0.0")
+    testImplementation("io.micronaut.flyway:micronaut-flyway:5.0.0")
 }
 
 
