@@ -19,12 +19,13 @@ internal class ProductResourcesTestIT(
     fun `when ProductsServiceGrpc create method is call with valid should be return success`() {
         val request = ProductServiceRequest.newBuilder()
             .setName("product name")
+            .setPrice(20.10)
             .setQuantityInStock(10)
             .build()
 
         val response = productsServiceBlockingStub.create(request)
 
-        assertEquals(1, response.id)
+        assertEquals(2, response.id)
         assertEquals("product name", response.name)
         assertEquals(20.10, response.price)
     }
@@ -54,6 +55,23 @@ internal class ProductResourcesTestIT(
         }
 
         assertEquals(Status.NOT_FOUND.code, response.status.code)
+        assertEquals(description, response.status.description)
+    }
+
+    @Test
+    fun `when ProductsServiceGrpc create method is call with invalid data a AlreadyExistsException is returned`() {
+        val request = ProductServiceRequest.newBuilder()
+            .setName("Product A")
+            .setQuantityInStock(10)
+            .build()
+
+        val description = "Produto [ ${request.name} ] já cadastrado no sistema"
+
+        val response = assertThrows<StatusRuntimeException> {
+            productsServiceBlockingStub.create(request)
+        }
+
+        assertEquals(Status.ALREADY_EXISTS.code, response.status.code)
         assertEquals(description, response.status.description)
     }
 }
