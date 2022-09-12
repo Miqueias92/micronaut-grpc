@@ -3,10 +3,13 @@ package br.com.products.resources
 import br.com.products.FindByIdServiceRequest
 import br.com.products.ProductServiceRequest
 import br.com.products.ProductsServiceGrpc.ProductsServiceBlockingStub
+import io.grpc.Status
+import io.grpc.StatusRuntimeException
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 @MicronautTest
 internal class ProductResourcesTestIT(
@@ -36,5 +39,21 @@ internal class ProductResourcesTestIT(
 
         assertEquals(1, response.id)
         assertEquals("Product A", response.name)
+    }
+
+    @Test
+    fun `when ProductsServiceGrpc create method is call with invalid id should be return ProductNotFoundException`() {
+        val request = FindByIdServiceRequest.newBuilder()
+            .setId(10)
+            .build()
+
+        val description = "Produto com id [ ${request.id} ] não cadastrado no sistema"
+
+        val response = assertThrows<StatusRuntimeException> {
+            productsServiceBlockingStub.findById(request)
+        }
+
+        assertEquals(Status.NOT_FOUND.code, response.status.code)
+        assertEquals(description, response.status.description)
     }
 }
