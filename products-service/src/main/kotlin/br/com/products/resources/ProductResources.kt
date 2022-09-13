@@ -3,8 +3,10 @@ package br.com.products.resources
 import br.com.products.FindByIdServiceRequest
 import br.com.products.ProductServiceResponse
 import br.com.products.ProductServiceRequest
+import br.com.products.ProductServiceUpdateRequest
 import br.com.products.ProductsServiceGrpc
 import br.com.products.dto.ProductRequest
+import br.com.products.dto.ProductUpdateRequest
 import br.com.products.exception.BaseBusinessException
 import br.com.products.service.ProductService
 import br.com.products.util.ValidationUtil
@@ -57,6 +59,36 @@ class ProductResources(
             val productResponse = productService.findById(request!!.id)
 
             val response = ProductServiceResponse.newBuilder()
+                .setId(productResponse.id!!)
+                .setName(productResponse.name)
+                .setPrice(productResponse.price)
+                .setQuantityInStock(productResponse.quantityInStock).build()
+
+            responseObserver?.onNext(response)
+            responseObserver?.onCompleted()
+        } catch (ex: BaseBusinessException) {
+            responseObserver?.onError(
+                ex.statusCode().toStatus().withDescription(ex.errorMessage())
+                    .asRuntimeException()
+            )
+        }
+    }
+
+    override fun update(
+        request: ProductServiceUpdateRequest?,
+        responseObserver: StreamObserver<ProductServiceResponse>?
+    ) {
+        try {
+            val productRequest = ProductUpdateRequest(
+                id = request!!.id,
+                name = request.name,
+                price = request.price,
+                quantityInStock = request.quantityInStock
+            )
+            val productResponse = productService.update(productRequest)
+
+            val response = ProductServiceResponse
+                .newBuilder()
                 .setId(productResponse.id!!)
                 .setName(productResponse.name)
                 .setPrice(productResponse.price)
