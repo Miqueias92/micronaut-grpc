@@ -1,20 +1,21 @@
 package br.com.products.util
 
 import br.com.products.ProductServiceRequest
+import br.com.products.exception.InvalidArgumentException
 
 class ValidationUtil {
     companion object {
         fun validatePayload(payload: ProductServiceRequest?) : ProductServiceRequest {
             payload?.let {
                 if (it.name.isNullOrBlank())
-                    throw IllegalArgumentException("O nome não pode ser nulo ou vazio")
+                    throw InvalidArgumentException("name")
 
                 if (it.price.isNaN() || it.price < 0)
-                    throw IllegalArgumentException("Preco precisa ser um valor valido")
+                    throw InvalidArgumentException("preço")
 
                 return it
             }
-            throw IllegalArgumentException()
+            throw InvalidArgumentException("payload")
         }
     }
 }

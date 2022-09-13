@@ -1,6 +1,7 @@
 package br.com.products.util
 
 import br.com.products.ProductServiceRequest
+import br.com.products.exception.InvalidArgumentException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -28,7 +29,7 @@ internal class ValidationUtilTest {
             .setQuantityInStock(10)
             .build()
 
-        Assertions.assertThrowsExactly(IllegalArgumentException::class.java) {
+        Assertions.assertThrowsExactly(InvalidArgumentException::class.java) {
             ValidationUtil.validatePayload(request)
         }
     }
@@ -41,7 +42,7 @@ internal class ValidationUtilTest {
             .setQuantityInStock(10)
             .build()
 
-        Assertions.assertThrowsExactly(IllegalArgumentException::class.java) {
+        Assertions.assertThrowsExactly(InvalidArgumentException::class.java) {
             ValidationUtil.validatePayload(request)
         }
     }
