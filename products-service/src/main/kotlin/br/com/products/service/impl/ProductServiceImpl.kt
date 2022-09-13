@@ -4,6 +4,7 @@ import br.com.products.domain.Product
 import br.com.products.domain.toProductResponse
 import br.com.products.dto.ProductRequest
 import br.com.products.dto.ProductResponse
+import br.com.products.dto.ProductUpdateRequest
 import br.com.products.exception.AlreadyExistsException
 import br.com.products.exception.ProductNotFoundException
 import br.com.products.repository.ProductRepository
@@ -39,6 +40,21 @@ class ProductServiceImpl(
             .orElseThrow {
                 ProductNotFoundException(id)
             }.toProductResponse()
+    }
+
+    override fun update(request: ProductUpdateRequest): ProductResponse {
+        verifyByName(request.name)
+        val product = productRepository.findById(request.id)
+            .orElseThrow {
+                ProductNotFoundException(request.id)
+            }
+
+        val copy = product.copy(
+            name = request.name,
+            price = request.price,
+            quantityInStock = request.quantityInStock
+        )
+        return productRepository.save(copy).toProductResponse()
     }
 
     private fun verifyByName(name: String) {
