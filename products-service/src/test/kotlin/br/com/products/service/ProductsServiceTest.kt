@@ -1,6 +1,7 @@
 package br.com.products.service
 import br.com.products.domain.Product
 import br.com.products.dto.ProductRequest
+import br.com.products.dto.ProductUpdateRequest
 import br.com.products.exception.AlreadyExistsException
 import br.com.products.exception.BaseBusinessException
 import br.com.products.exception.ProductNotFoundException
@@ -84,6 +85,37 @@ internal class ProductsServiceTest {
     }
 
     @Test
+    fun `when update method is call with duplicated product-name throws AlreadyExistsException` () {
+        val productInput = Product(
+            id = 1,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        val productOutput = Product(
+            id = 1,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        val request = ProductUpdateRequest(
+            id = 1,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        `when`(productRepository.findByNameIgnoreCase(productInput.name))
+            .thenReturn(productOutput)
+
+        assertThrows<AlreadyExistsException> {
+            productService.update(request)
+        }
+    }
+
+    @Test
     fun `when findById method is call with valid id a ProductResponse is returned` () {
         val productInput = 1L
 
@@ -101,6 +133,23 @@ internal class ProductsServiceTest {
 
         assertEquals(productInput, response.id)
         assertEquals(productOutput.name, response.name)
+    }
+
+    @Test
+    fun `when update method is call with invalid id throws ProductNotFoundException` () {
+        val request = ProductUpdateRequest(
+            id = 1,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        `when`(productRepository.findByNameIgnoreCase(request.name))
+            .thenReturn(null)
+
+        assertThrows<ProductNotFoundException> {
+            productService.update(request)
+        }
     }
 
     @Test
