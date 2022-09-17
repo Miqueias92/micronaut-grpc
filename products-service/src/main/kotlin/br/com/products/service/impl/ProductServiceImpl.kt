@@ -66,6 +66,12 @@ class ProductServiceImpl(
         productRepository.delete(product)
     }
 
+    override fun findAll(): List<ProductResponse> {
+        return productRepository.findAll().map {
+            it.toProductResponse()
+        }
+    }
+
     private fun verifyByName(name: String) {
         productRepository.findByNameIgnoreCase(name)?.let {
             throw AlreadyExistsException(name)

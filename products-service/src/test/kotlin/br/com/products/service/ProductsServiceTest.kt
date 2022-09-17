@@ -1,6 +1,7 @@
 package br.com.products.service
 import br.com.products.domain.Product
 import br.com.products.dto.ProductRequest
+import br.com.products.dto.ProductResponse
 import br.com.products.dto.ProductUpdateRequest
 import br.com.products.exception.AlreadyExistsException
 import br.com.products.exception.BaseBusinessException
@@ -225,5 +226,38 @@ internal class ProductsServiceTest {
         assertThrows<ProductNotFoundException> {
             productService.delete(id)
         }
+    }
+
+    @Test
+    fun `when findAll method is call a list of ProductResponse is returned` () {
+        val productsList = listOf(
+            Product(
+                id = 1,
+                name = "update product",
+                price = 20.0,
+                quantityInStock = 15
+            )
+        )
+
+        `when`(productRepository.findAll())
+            .thenReturn(productsList)
+
+        val response = productService.findAll()
+
+        assertEquals(1, response.size)
+        assertEquals(productsList.first().name, response.first().name)
+        assertEquals(productsList.first().price, response.first().price)
+    }
+
+    @Test
+    fun `when findAll method is call without Products a emptyList is returned` () {
+        val productListSize = 0
+
+        `when`(productRepository.findAll())
+            .thenReturn(emptyList())
+
+        val response = productService.findAll()
+
+        assertEquals(productListSize, response.size)
     }
 }
