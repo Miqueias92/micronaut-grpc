@@ -1,6 +1,6 @@
 package br.com.products.resources
 
-import br.com.products.FindByIdServiceRequest
+import br.com.products.RequestById
 import br.com.products.ProductServiceRequest
 import br.com.products.ProductServiceUpdateRequest
 import br.com.products.ProductsServiceGrpc.ProductsServiceBlockingStub
@@ -8,7 +8,6 @@ import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.flywaydb.core.Flyway
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -44,7 +43,7 @@ internal class ProductResourcesTestIT(
 
     @Test
     fun `when ProductsServiceGrpc create method is call with valid id should be return success`() {
-        val request = FindByIdServiceRequest.newBuilder()
+        val request = RequestById.newBuilder()
             .setId(1)
             .build()
 
@@ -56,7 +55,7 @@ internal class ProductResourcesTestIT(
 
     @Test
     fun `when ProductsServiceGrpc create method is call with invalid id should be return ProductNotFoundException`() {
-        val request = FindByIdServiceRequest.newBuilder()
+        val request = RequestById.newBuilder()
             .setId(10)
             .build()
 

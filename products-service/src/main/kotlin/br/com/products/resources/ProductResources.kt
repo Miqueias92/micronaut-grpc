@@ -1,6 +1,6 @@
 package br.com.products.resources
 
-import br.com.products.FindByIdServiceRequest
+import br.com.products.RequestById
 import br.com.products.ProductServiceResponse
 import br.com.products.ProductServiceRequest
 import br.com.products.ProductServiceUpdateRequest
@@ -52,7 +52,7 @@ class ProductResources(
     }
 
     override fun findById(
-        request: FindByIdServiceRequest?,
+        request: RequestById?,
         responseObserver: StreamObserver<ProductServiceResponse>?
     ) {
         try {

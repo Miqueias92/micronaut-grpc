@@ -7,9 +7,12 @@ package br.com.products;
 
 service ProductsService {
   rpc Create (ProductServiceRequest) returns (ProductServiceResponse) {}
-  rpc FindById (FindByIdServiceRequest) returns (ProductServiceResponse) {}
+  rpc FindById (RequestById) returns (ProductServiceResponse) {}
   rpc Update (ProductServiceUpdateRequest) returns (ProductServiceResponse) {}
+  rpc Delete (RequestById) returns (Empty) {}
 }
+
+message Empty {}
 
 message ProductServiceRequest {
   string name = 1;
@@ -24,7 +27,7 @@ message ProductServiceResponse {
   int32 quantity_in_stock = 4;
 }
 
-message FindByIdServiceRequest {
+message RequestById {
   int64 id = 1;
 }
 
