@@ -5,6 +5,7 @@ import br.com.products.RequestById
 import br.com.products.ProductServiceResponse
 import br.com.products.ProductServiceRequest
 import br.com.products.ProductServiceUpdateRequest
+import br.com.products.ProductsList
 import br.com.products.ProductsServiceGrpc
 import br.com.products.dto.ProductRequest
 import br.com.products.dto.ProductUpdateRequest
@@ -112,6 +113,32 @@ class ProductResources(
         try {
             productService.delete(request!!.id)
             responseObserver?.onNext(Empty.newBuilder().build())
+            responseObserver?.onCompleted()
+        } catch (ex: BaseBusinessException) {
+            responseObserver?.onError(
+                ex.statusCode().toStatus().withDescription(ex.errorMessage())
+                    .asRuntimeException()
+            )
+        }
+    }
+
+    override fun findAll(request: Empty?, responseObserver: StreamObserver<ProductsList>?) {
+        try {
+            val productServiceResponseList = productService.findAll().map {
+                ProductServiceResponse
+                    .newBuilder()
+                    .setId(it.id!!)
+                    .setName(it.name)
+                    .setPrice(it.price)
+                    .setQuantityInStock(it.quantityInStock).build()
+            }
+
+            val productsList = ProductsList
+                .newBuilder()
+                .addAllProducts(productServiceResponseList)
+                .build()
+
+            responseObserver?.onNext(productsList)
             responseObserver?.onCompleted()
         } catch (ex: BaseBusinessException) {
             responseObserver?.onError(
