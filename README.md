@@ -21,6 +21,10 @@ https://www.linkedin.com/in/miqueias-sousa/
 - ``Protocol Buffers``
 - ``JUnit 5``
 - ``Mockito``
+- ``Flyway``
+- ``H2 memory Database``
+- ``PostgreSQL``
+- ``Docker``
 
 ## References
 
