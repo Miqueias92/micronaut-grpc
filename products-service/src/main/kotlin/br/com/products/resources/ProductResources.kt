@@ -15,6 +15,7 @@ import br.com.products.util.ValidationUtil
 import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
+import java.lang.Exception
 
 @GrpcService
 class ProductResources(
@@ -50,6 +51,12 @@ class ProductResources(
                 ex.statusCode().toStatus().withDescription(ex.errorMessage())
                     .asRuntimeException()
             )
+        } catch (ex: Exception) {
+            responseObserver?.onError(
+                Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal Server Error")
+                    .asException()
+            )
         }
     }
 
@@ -72,6 +79,12 @@ class ProductResources(
             responseObserver?.onError(
                 ex.statusCode().toStatus().withDescription(ex.errorMessage())
                     .asRuntimeException()
+            )
+        } catch (ex: Exception) {
+            responseObserver?.onError(
+                Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal Server Error")
+                    .asException()
             )
         }
     }
@@ -106,6 +119,12 @@ class ProductResources(
                 ex.statusCode().toStatus().withDescription(ex.errorMessage())
                     .asRuntimeException()
             )
+        } catch (ex: Exception) {
+            responseObserver?.onError(
+                Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal Server Error")
+                    .asException()
+            )
         }
     }
 
@@ -118,6 +137,12 @@ class ProductResources(
             responseObserver?.onError(
                 ex.statusCode().toStatus().withDescription(ex.errorMessage())
                     .asRuntimeException()
+            )
+        } catch (ex: Exception) {
+            responseObserver?.onError(
+                Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal Server Error")
+                    .asException()
             )
         }
     }
@@ -144,6 +169,12 @@ class ProductResources(
             responseObserver?.onError(
                 ex.statusCode().toStatus().withDescription(ex.errorMessage())
                     .asRuntimeException()
+            )
+        } catch (ex: Exception) {
+            responseObserver?.onError(
+                Status.UNKNOWN.code.toStatus()
+                    .withDescription("Internal Server Error")
+                    .asException()
             )
         }
     }
