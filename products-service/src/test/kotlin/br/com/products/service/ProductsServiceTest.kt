@@ -10,6 +10,7 @@ import br.com.products.service.impl.ProductServiceImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrowsExactly
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -192,6 +193,37 @@ internal class ProductsServiceTest {
         val productInput = 1L
         assertThrows<ProductNotFoundException> {
             productService.findById(productInput)
+        }
+    }
+
+    @Test
+    fun `when delete method is call with valid id the Product is deleted` () {
+        val id = 1L
+
+        val productOutput = Product(
+            id = 1,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        `when`(productRepository.findById(id))
+            .thenReturn(Optional.of(productOutput))
+
+        assertDoesNotThrow {
+            productService.delete(productOutput.id!!)
+        }
+    }
+
+    @Test
+    fun `when delete method is call with invalid id throws ProductNotFoundException` () {
+        val id = 1L
+
+        `when`(productRepository.findById(id))
+            .thenReturn(Optional.empty())
+
+        assertThrows<ProductNotFoundException> {
+            productService.delete(id)
         }
     }
 }
