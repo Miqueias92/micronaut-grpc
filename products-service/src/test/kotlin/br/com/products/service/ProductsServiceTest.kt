@@ -153,6 +153,41 @@ internal class ProductsServiceTest {
     }
 
     @Test
+    fun `when update method is call with valid data a ProductResponse is returned` () {
+        val productInput = Product(
+            id = 1,
+            name = "update product",
+            price = 20.0,
+            quantityInStock = 15
+        )
+
+        val productOutput = Product(
+            id = 1,
+            name = "product name",
+            price = 10.0,
+            quantityInStock = 5
+        )
+
+        val request = ProductUpdateRequest(
+            id = 1,
+            name = "update product",
+            price = 20.0,
+            quantityInStock = 15
+        )
+
+        `when`(productRepository.findById(productInput.id!!))
+            .thenReturn(Optional.of(productOutput))
+
+        `when`(productRepository.update(productInput))
+            .thenReturn(productInput)
+
+        val response = productService.update(request)
+
+        assertEquals(request.name, response.name)
+        assertEquals(request.price, response.price)
+    }
+
+    @Test
     fun `when findById method is call with invalid id throws ProductNotFoundException` () {
         val productInput = 1L
         assertThrows<ProductNotFoundException> {
