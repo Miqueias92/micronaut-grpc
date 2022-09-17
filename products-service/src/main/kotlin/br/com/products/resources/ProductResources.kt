@@ -1,5 +1,6 @@
 package br.com.products.resources
 
+import br.com.products.Empty
 import br.com.products.RequestById
 import br.com.products.ProductServiceResponse
 import br.com.products.ProductServiceRequest
@@ -98,6 +99,19 @@ class ProductResources(
                 .setQuantityInStock(productResponse.quantityInStock).build()
 
             responseObserver?.onNext(response)
+            responseObserver?.onCompleted()
+        } catch (ex: BaseBusinessException) {
+            responseObserver?.onError(
+                ex.statusCode().toStatus().withDescription(ex.errorMessage())
+                    .asRuntimeException()
+            )
+        }
+    }
+
+    override fun delete(request: RequestById?, responseObserver: StreamObserver<Empty>?) {
+        try {
+            productService.delete(request!!.id)
+            responseObserver?.onNext(Empty.newBuilder().build())
             responseObserver?.onCompleted()
         } catch (ex: BaseBusinessException) {
             responseObserver?.onError(

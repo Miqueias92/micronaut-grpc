@@ -11,6 +11,7 @@ import org.flywaydb.core.Flyway
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 @MicronautTest
@@ -148,6 +149,33 @@ internal class ProductResourcesTestIT(
 
         val response = assertThrows<StatusRuntimeException> {
             productsServiceBlockingStub.update(request)
+        }
+
+        assertEquals(Status.NOT_FOUND.code, response.status.code)
+        assertEquals(description, response.status.description)
+    }
+
+    @Test
+    fun `when ProductsServiceGrpc delete method is call with valid id should be return success`() {
+        val request = RequestById.newBuilder()
+            .setId(1L)
+            .build()
+
+        assertDoesNotThrow {
+            productsServiceBlockingStub.delete(request)
+        }
+    }
+
+    @Test
+    fun `when ProductsServiceGrpc delete method is call with invalid id should be return ProductNotFoundException`() {
+        val request = RequestById.newBuilder()
+            .setId(4L)
+            .build()
+
+        val description = "Produto com id [ ${request.id} ] não cadastrado no sistema"
+
+        val response = assertThrows<StatusRuntimeException> {
+            productsServiceBlockingStub.delete(request)
         }
 
         assertEquals(Status.NOT_FOUND.code, response.status.code)
